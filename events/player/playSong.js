@@ -11,10 +11,10 @@ module.exports = async (client, queue, song) => {
         iconURL: 'https://cdn.discordapp.com/attachments/1140841446228897932/1144671132948103208/giphy.gif', 
         url: 'https://discord.gg/FUEHs7RCqz'
     })
-    .setDescription(`\n ‎ \n▶️ **Details :** **${song?.name}**\n▶️ **Enjoy the Ultimate Music Experience. ** \n▶️ **If link breaks playback try to give query.**`)
+    .setDescription(`\n ‎ \n▶️ **Details :** **${song?.name}**\n▶️ **Tận hưởng trải nghiệm âm nhạc đỉnh cao. ** \n▶️ **Nếu liên kết bị hỏng khi phát lại, hãy thử đưa ra truy vấn.**`)
 .setImage(queue.songs[0].thumbnail)
     .setColor('#FF0000')
-    .setFooter({ text: 'More info - Use /help command [RTX GAMING]' });
+    .setFooter({ text: 'Thông tin thêm - Sử dụng lệnh /help [Trinho]' });
      
       queue?.textChannel?.send({ embeds: [embed] }).catch(e => { });
     }
