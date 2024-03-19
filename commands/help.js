@@ -1,103 +1,83 @@
-/*
-
-  ██████╗░████████╗██╗░░██╗           
-  ██╔══██╗╚══██╔══╝╚██╗██╔╝          
-  ██████╔╝░░░██║░░░░╚███╔╝░          
-  ██╔══██╗░░░██║░░░░██╔██╗░          
-  ██║░░██║░░░██║░░░██╔╝╚██╗          
-  ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░╚═╝          
-
-   
-   # MADE BY RTX!! FEEL FREE TO USE ANY PART OF CODE
-   ## FOR HELP CONTACT ME ON DISCORD
-   ## Contact    [ DISCORD SERVER :  https://discord.gg/FUEHs7RCqz ]
-   ## YT : https://www.youtube.com/channel/UCPbAvYWBgnYhliJa1BIrv0A
-*/
-const { ApplicationCommandOptionType } = require('discord.js');
-const db = require("../mongoDB");
-
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const { ButtonStyle } = require('discord.js');
-
+const db = require("../mongodb");
 module.exports = {
-  name: "help",
-  description: "Get information about bot and commands.",
-  permissions: "0x0000000000000800",
-  options: [],
+  name: 'help',
+  aliases: ['hlp', 'h'],
+  description: 'Shows a list of available commands',
+  execute(message, args) {
+    const botUser = message.client.user;
+    const botPing = Date.now() - message.createdTimestamp;
+    const serverCount = message.client.guilds.cache.size;
+    const embed = new EmbedBuilder()
+      .setColor('#2b71ec')
+      .setAuthor({
+        name: 'Tôi ở đây để trợ giúp!',
+        iconURL: 'https://cdn.discordapp.com/attachments/1175487983915376662/1175667506791325706/communication.png?ex=656c10b0&is=65599bb0&hm=e378f1b355a2401bcab504b08a0766001d6b7c090c91ce0a7a7a87c868feb955&', 
+        url: 'https://discord.gg/FUEHs7RCqz'
+    })
+     
+      .setDescription(`__**STATS :**__\n\n> **📊 Bot in servers:** ${serverCount}\n> **🟢 Bot Ping:** ${botPing}ms\n> **👑 Made By [Trinho](https://www.youtube.com/channel/UC-xfqwctJQP3BDI060i15-w)**\n\n__**COMMANDS :**__ `)
+      .addFields(
+        // Basic commands category
+        {
+          name: '▶️  Basic',
+          value: '`avatar`, `owner`, `support`, `invite`, `userinfo`',
+          inline: true,
+        },
+        // Music commands category
+        {
+          name: '▶️  âm nhạc',
+          value: '`play`, `stop`, `history`,`volume`,`pause`,`resume`,`247`',
+          inline: true,
+        },
+        //fun category
+        {
+          name: '▶️  vui vẽ',
+          value: ' `ascii`, `joke`, `meme`, `roll`, `animecommands`',
+          inline: true,
+        },
+        //image category
+        {
+          name: '▶️  hình ảnh',
+          value: '`cat`, `dog`, `panda`',
+          inline: true,
+        },
+        //anime category
+        {
+          name: '▶️  trẻ con',
+          value: '`hug`, `slap`, `pat`, `kiss`, `blush`,`bonk`,`bored`,`bully`,`cry`,`cuddle`,`dance`,`sad`,`stare`,`yes`,`wink`,`wave`,`thinking`,`scream`,`nervous`,`highfive`',
+          inline: true,
+        },
+          
+        // Utility commands category
+        {
+          name: '▶️  dành cho người cấp cao',
+          value: '`kick`, `ban`, `serverinfo`, `clear`, `uptime``thaydoiprefix`',
+          inline: true,
+        }
+      )
+      .setThumbnail(botUser.avatarURL({ dynamic: true, format: 'png', size: 1024 }))
+      .setImage(`https://imgt.taimienphi.vn/cf/Images/np/2022/10/12/tai-anh-dong-dep-3.gif`);
 
-  run: async (client, interaction) => {
-    try {
-      const musicCommandsEmbed = new EmbedBuilder()
-        .setColor(client.config.embedColor)
-        .setTitle('🎸 **Music Commands**')
-        .addFields(
-          { name: '🎹 Play', value: 'Stream a song from a given link or text from sources' },
-          { name: '⏹️ Stop', value: 'Makes the bot stop playing music and leave the voice' },
-          { name: '📊 Queue', value: 'View and manage the song queue of this server' },
-          { name: '⏭️ Skip', value: 'Skip the current playing song' },
-          { name: '⏸️ Pause', value: 'Pause the currently playing song' },
-          { name: '▶️ Resume', value: 'Resume the current paused song' },
-          { name: '🔁 Loop', value: 'Toggle loop mode for queue and current song' },
-          { name: '🔄 Autoplay', value: 'Enable or disable autoplay [play random songs ]' },
-          { name: '⏩ Seek', value: 'Seek to a specific time in the current song' },
-          { name: '⏮️ Previous', value: 'Play the previous song in the queue' },
-          { name: '🔀 Shuffle', value: 'Shuffle the songs in queue' },
-          { name: '📃 playlist', value: 'manage the playlists' }
-        )
-        .setImage(`https://cdn.discordapp.com/attachments/1004341381784944703/1165201249331855380/RainbowLine.gif?ex=654f37ba&is=653cc2ba&hm=648a2e070fab36155f4171962e9c3bcef94857aca3987a181634837231500177&`); 
+    const button1 = new ButtonBuilder()
+      .setLabel('YouTube')
+      .setURL('https://www.youtube.com/channel/UC-xfqwctJQP3BDI060i15-w')
+      .setStyle(ButtonStyle.Link);
 
-      const basicCommandsEmbed = new EmbedBuilder()
-        .setColor(client.config.embedColor)
-        .setTitle('✨ **Basic Commands**')
-        .addFields(
-          { name: '🏓 Ping', value: "Check the bot's latency" },
-          { name: '🗑️ Clear', value: 'Clear the song queue of this server' },
-          { name: '⏱️ Time', value: 'Display the current song playback time' },
-          { name: '🎧 Filter', value: 'Apply filters to enhance the sound as you love' },
-           { name: '🎵 Now Playing', value: 'Display the currently playing song information' },
-          { name: '🔊 Volume', value: 'Adjust the music volume [ hearing at high volumes is risky ]' },
-        ) 
-       .setImage('https://cdn.discordapp.com/attachments/1150827819547504741/1168917372267151370/standard.gif?ex=65538222&is=65410d22&hm=b4994392f44679da41fc9304eb69deaa3769e136057556deec0db69ae8d33a97&')
-      const button1 = new ButtonBuilder()
-        .setLabel('YouTube')
-        .setURL('https://www.youtube.com/channel/UCPbAvYWBgnYhliJa1BIrv0A')
-        .setStyle(ButtonStyle.Link);
+    const button2 = new ButtonBuilder()
+      .setLabel('Discord')
+      .setURL('https://discord.gg/Wx5zsTBU')
+      .setStyle(ButtonStyle.Link);
 
-      const button2 = new ButtonBuilder()
-        .setLabel('Discord')
-        .setURL('https://discord.gg/FUEHs7RCqz')
-        .setStyle(ButtonStyle.Link);
-
-      const button3 = new ButtonBuilder()
-        .setLabel('Code')
-        .setURL('https://github.com/RTX-GAMINGG/RTX-MUSIC-BOT-v3.6')
-        .setStyle(ButtonStyle.Link);
-
-      const row = new ActionRowBuilder()
-        .addComponents(button1, button2, button3);
-
-      interaction.reply({
-        embeds: [musicCommandsEmbed, basicCommandsEmbed],
-        components: [row]
-      }).catch(e => {});
-    } catch (e) {
-      console.error(e);
-    }
+    const button3 = new ButtonBuilder()
+      .setLabel('FB')
+      .setURL('https://www.facebook.com/trinhohades')
+      .setStyle(ButtonStyle.Link);
+      
+    const row = new ActionRowBuilder()
+      .addComponents(button1, button2, button3);
+    
+    message.reply({ embeds: [embed], components: [row] });
   },
 };
-
-/*
-
-  ██████╗░████████╗██╗░░██╗           
-  ██╔══██╗╚══██╔══╝╚██╗██╔╝          
-  ██████╔╝░░░██║░░░░╚███╔╝░          
-  ██╔══██╗░░░██║░░░░██╔██╗░          
-  ██║░░██║░░░██║░░░██╔╝╚██╗          
-  ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░╚═╝          
-
-   
-   # MADE BY RTX!! FEEL FREE TO USE ANY PART OF CODE
-   ## FOR HELP CONTACT ME ON DISCORD
-   ## Contact    [ DISCORD SERVER :  https://discord.gg/FUEHs7RCqz ]
-   ## YT : https://www.youtube.com/channel/UCPbAvYWBgnYhliJa1BIrv0A
-*/
